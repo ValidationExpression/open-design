@@ -17,6 +17,7 @@ import type {
   ChatRunStatus,
   ChatRunStatusResponse,
   ChatRequest,
+  ChatSessionMode,
   ChatSseEvent,
   ChatSseStartPayload,
   DaemonAgentPayload,
@@ -205,6 +206,7 @@ export interface DaemonStreamOptions {
   // workspace.
   projectId?: string | null;
   conversationId?: string | null;
+  sessionMode?: ChatSessionMode;
   assistantMessageId?: string | null;
   clientRequestId?: string | null;
   skillId?: string | null;
@@ -225,6 +227,7 @@ export interface DaemonStreamOptions {
   reasoning?: string | null;
   research?: ResearchOptions;
   context?: RunContextSelection;
+  appliedPluginSnapshotId?: string | null;
   mediaExecution?: MediaExecutionPolicy;
   locale?: string;
   initialLastEventId?: string | null;
@@ -301,6 +304,7 @@ export async function streamViaDaemon({
   handlers,
   projectId,
   conversationId,
+  sessionMode,
   assistantMessageId,
   clientRequestId,
   skillId,
@@ -312,6 +316,7 @@ export async function streamViaDaemon({
   reasoning,
   research,
   context,
+  appliedPluginSnapshotId,
   mediaExecution,
   locale,
   initialLastEventId,
@@ -334,6 +339,7 @@ export async function streamViaDaemon({
     currentPrompt: latestUserPromptFromHistory(history),
     projectId: projectId ?? null,
     conversationId: conversationId ?? null,
+    sessionMode,
     assistantMessageId: assistantMessageId ?? null,
     clientRequestId: clientRequestId ?? null,
     skillId: skillId ?? null,
@@ -344,6 +350,7 @@ export async function streamViaDaemon({
     model: model ?? null,
     reasoning: reasoning ?? null,
     locale,
+    ...(appliedPluginSnapshotId ? { appliedPluginSnapshotId } : {}),
     ...(context ? { context } : {}),
     ...(research ? { research } : {}),
     ...(mediaExecution ? { mediaExecution } : {}),
